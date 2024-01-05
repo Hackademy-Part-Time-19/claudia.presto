@@ -135,75 +135,293 @@
 				$menu._hide();
 
 		});
-	
-	window.addEventListener("load", function () {
-		let page = window.location.href.includes("catalogo.html")
-			? "catalogo.html"
-			: "prodotto.html";
-
-		if (window.location.href.includes(page)) {
-			let url = new URL(window.location.href);
-			let nome = url.searchParams.get("nomeArticolo");
-			let prezzo = url.searchParams.get("prezzo");
-			let categoria = url.searchParams.get("categoria");
-
-			let prezzoMin = 0;
-			let prezzoMax = Infinity;
-
-			if (prezzo === "") {
-				prezzoMin === "";
-				prezzoMax === "";
-			} else if (prezzo === "0-100") {
-				prezzoMin = 0;
-				prezzoMax = 100;
-			} else if (prezzo === "100-200") {
-				prezzoMin = 100;
-				prezzoMax = 200;
-			} else if (prezzo === "200-300") {
-				prezzoMin = 200;
-				prezzoMax = 300;
-			} else if (prezzo === "300") {
-				prezzoMin = 300;
-				prezzoMax = Infinity;
-			}
-			filtraCatalogo(nome, prezzoMin, prezzoMax, categoria);
-		} else if (window.location.href.includes("PagProdotto.html")) {
-			let url = new URL(window.location.href);
-			let idProdotto = url.searchParams.get("idProdotto");
-			ottieniProdotto(idProdotto);
-		} else {
-			console.log("non sono nel catalogo");
-		}
-	});
-
-	function filtraCatalogo(nome, prezzoMin, prezzoMax, categoria) {
-		fetch("https://fakestoreapi.com/products")
-			.then((response) => response.json())
-			.then((data) => {
-				document.getElementById("EffetoCaricamento").style.display = "none";
-				let prodotti = data;
-				console.log(prodotti)
-
-
-				let prodottiFiltrati = prodotti.filter((prodotto) => {
-					return (!prezzoMax || (prodotto.price >= prezzoMin && prodotto.price <= prezzoMax)) &&
-						(!nome || prodotto.title.includes(nome)) &&
-						(!categoria || prodotto.category === categoria);
-				})
-				visualizzaProdotti(prodottiFiltrati);
-			}).catch((error) =>
-				console.log(error));
-
-	};
-	function vaiAlCatalogo() {
-		let nome = document.getElementById("Nome").value;
-		let prezzo = document.getElementById("Prezzo").value;
-		let categoria = document.getElementById("Categoria").value;
-		window.location.href = `catalogo.html?&categoria=${categoria}&prezzo=${prezzo}&nome=${nome}`;
-	  };
-	 
-	  
-
-	
-
 })(jQuery);
+
+
+function vaiAlCatalogo() {
+	let nome = document.getElementById("nome").value;
+	let categoria = document.getElementById("categoria").value;
+	let prezzo = document.getElementById("prezzo").value;
+
+	window.location.href = `catalogo.html?prezzo=${prezzo}&nome=${nome}&categoria=${categoria}`;
+
+}
+window.addEventListener("load", function () {
+
+	if (window.location.href.includes("catalogo.html")) {
+		let url = new URL(window.location.href);
+		let nome = url.searchParams.get("nome");
+		let categoria = url.searchParams.get("categoria");
+		let prezzo = url.searchParams.get("prezzo");
+		let limiteInferiore;
+		let limiteSuperiore;
+		if (prezzo == "0-100") {
+			limiteInferiore = 0;
+			limiteSuperiore = 100;
+		}
+		else if (prezzo == "100-200") {
+			limiteInferiore = 101;
+			limiteSuperiore = 200;
+		}
+		else if (prezzo == "200-500") {
+			limiteInferiore = 201
+			limiteSuperiore = 500;
+		}
+		else if (prezzo == "500") {
+			limiteInferiore = 501;
+			limiteSuperiore = Infinity;
+		}
+
+		filtraProdottiCatalogo(nome, limiteInferiore, limiteSuperiore, categoria);
+	}
+	else {
+		console.log("Non sono nel catalogo");
+	}
+});
+
+
+
+function filtraProdottiCatalogo(nome, limiteInferiore, limiteSuperiore, categoria){
+	fetch("https://fakestoreapi.com/products")
+		.then((response) => response.json())
+		.then((data) => {
+		console.log(data);
+		listafiltrata = data.filter((prodotto) => {
+
+			if (limiteSuperiore != undefined && nome != "" && categoria != "") {
+				return prodotto.price >= limiteInferiore && prodotto.price < limiteSuperiore && prodotto.title.startswith(nome) && prodotto.category == categoria;
+
+			} else if (limiteSuperiore == undefined && nome != "" && categoria != "") {
+				return prodotto.price >= limiteInferiore && prodotto.title.startswith(nome) && prodotto.category == categoria;
+
+			} else if (limiteSuperiore == undefined && nome == "" && categoria != "") {
+				return prodotto.price >= limiteInferiore && prodotto.category == categoria;
+
+			} else if (limiteSuperiore = undefined && nome != "" && categoria == "") {
+				return prodotto.price >= limiteInferiore && prodotto.title.startswith(nome);
+
+			} else if (limiteSuperiore != undefined && nome == "" && categoria != "") {
+				return prodotto.price >= limiteInferiore && prodotto.price < limiteSuperiore && prodotto.category == categoria;
+			}
+		})
+	
+	data = data.filter(function (prodotto) {
+		return prodotto.category == categoria &&
+			prodotto.title.startsWithh(nome) && prodotto.prezzo
+	})
+	for (let i = 0; i < data.length; i++) {
+		console.log("Sono entrato nel ciclo")
+		let divProdotto =
+			document.getElementById("cardContainer")
+		let immagine = data[i].image;
+		let nome = data[i].title;
+		let descrizione = data[i].description;
+		let prezzo = data[i].price;
+		divProdotto.innerHTML += `<div id="cardContainer">
+				<section id="elettronica" class="wrapper alt style1">
+					<div class="inner">
+						<h2 class="major">Il meglio dell'Elettronica</h2>
+						<section class="features">
+							<article id="1">
+								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="2">
+								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="3">
+								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="4">
+								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="5">
+								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="6">
+								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+
+						</section>
+					</div>
+				</section>
+
+				<section id="gioielli" class="wrapper alt style1">
+					<div class="inner">
+						<h2 class="major">Gioielli</h2>
+						<section class="features">
+							<article id="7">
+								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="8">
+								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="9">
+								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="10">
+								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="11">
+								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="12">
+								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+
+					</div>
+				</section>
+				<section id="modaDonna" class="wrapper alt style1">
+					<div class="inner">
+						<h2 class="major">Moda donna</h2>
+						<section class="features">
+							<article id="13">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="14">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="15">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="16">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="17">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="18">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+
+					</div>
+				</section>
+				<section id="modaUomo" class="wrapper alt style1">
+					<div class="inner">
+						<h2 class="major">Moda uomo</h2>
+						<section class="features">
+							<article id="19">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="20">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="21">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="22">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="23">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+							</article>
+							<article id="24">
+								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
+								<h3 class="major" id="Nome">${nome}</h3>
+								<p id="Descrizione">${descrizione}</p>
+								<p id="Prezzo">${prezzo}<br></p>
+								<a href="#" class="special">Acquista</a>
+
+					</div>
+				</section>
+
+
+	</section>
+</div>`
+	}
+})
+			.catch (error => {
+	console.log(error)
+})
+	}
