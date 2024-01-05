@@ -181,13 +181,32 @@ window.addEventListener("load", function () {
 
 
 
-function filtraProdottiCatalogo(nome, limiteInferiore, limiteSuperiore, categoria){
+function filtraProdottiCatalogo(nome, limiteInferiore, limiteSuperiore, categoria) {
 	fetch("https://fakestoreapi.com/products")
 		.then((response) => response.json())
 		.then((data) => {
-		console.log(data);
-		listafiltrata = data.filter((prodotto) => {
+			let prodotti = data
+			
+			for (let i = 0; i < prodotti.length; i++) {
 
+				let prodotto = prodotti[i];
+				document.getElementById("containerProdotti").innerHTML +=
+					`<article>
+			<a href="#" class="image"><img src="${prodotti[i].image}" alt="Elettronica"></a>
+			<h3 class="major" id="Nome">${prodotti[i].title}</h3>
+			<p id="Descrizione">${prodotti[i].description}</p>
+			<p id="Prezzo">€ ${prodotti[i].price}<br></p>
+			<a href="#" class="special">Acquista</a>
+		</article>`
+			}
+		})
+		.catch(error => {
+			console.log(error)
+			
+		})
+		
+		prodotti = data.filter((prodotto) => {
+	
 			if (limiteSuperiore != undefined && nome != "" && categoria != "") {
 				return prodotto.price >= limiteInferiore && prodotto.price < limiteSuperiore && prodotto.title.startswith(nome) && prodotto.category == categoria;
 
@@ -209,219 +228,5 @@ function filtraProdottiCatalogo(nome, limiteInferiore, limiteSuperiore, categori
 		return prodotto.category == categoria &&
 			prodotto.title.startsWithh(nome) && prodotto.prezzo
 	})
-	for (let i = 0; i < data.length; i++) {
-		console.log("Sono entrato nel ciclo")
-		let divProdotto =
-			document.getElementById("cardContainer")
-		let immagine = data[i].image;
-		let nome = data[i].title;
-		let descrizione = data[i].description;
-		let prezzo = data[i].price;
-		divProdotto.innerHTML += `<div id="cardContainer">
-				<section id="elettronica" class="wrapper alt style1">
-					<div class="inner">
-						<h2 class="major">Il meglio dell'Elettronica</h2>
-						<section class="features">
-							<article id="1">
-								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="2">
-								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="3">
-								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="4">
-								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="5">
-								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="6">
-								<a href="#" class="image"><img src="${immagine}" alt="Elettronica"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
 
-						</section>
-					</div>
-				</section>
-
-				<section id="gioielli" class="wrapper alt style1">
-					<div class="inner">
-						<h2 class="major">Gioielli</h2>
-						<section class="features">
-							<article id="7">
-								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="8">
-								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="9">
-								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="10">
-								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="11">
-								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="12">
-								<a href="#" class="image"><img src="${immagine}" alt="Gioielli"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-
-					</div>
-				</section>
-				<section id="modaDonna" class="wrapper alt style1">
-					<div class="inner">
-						<h2 class="major">Moda donna</h2>
-						<section class="features">
-							<article id="13">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="14">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="15">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="16">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="17">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="18">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda donna"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-
-					</div>
-				</section>
-				<section id="modaUomo" class="wrapper alt style1">
-					<div class="inner">
-						<h2 class="major">Moda uomo</h2>
-						<section class="features">
-							<article id="19">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="20">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="21">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="22">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="23">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-							</article>
-							<article id="24">
-								<a href="#" class="image"><img src="${immagine}" alt="Moda uomo"></a>
-								<h3 class="major" id="Nome">${nome}</h3>
-								<p id="Descrizione">${descrizione}</p>
-								<p id="Prezzo">${prezzo}<br></p>
-								<a href="#" class="special">Acquista</a>
-
-					</div>
-				</section>
-
-
-	</section>
-</div>`
-	}
-})
-			.catch (error => {
-	console.log(error)
-})
-	}
+}
